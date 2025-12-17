@@ -1,0 +1,32 @@
+/* scratch.css (from scratch) */
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  color: #1f2937;              /* font color requirement */
+  background: #fff7ed;         /* custom background color requirement */
+  margin: 0;
+}
+
+header {
+  padding: 24px;
+  background: #111827;
+  color: #f9fafb;
+}
+
+.section {
+  max-width: 1000px;
+  margin: 18px auto;
+  padding: 18px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+}
+
+.callout {
+  padding: 12px 14px;
+  border-left: 6px solid #2563eb;
+  background: #eff6ff;
+}
+
+a {
+  color: #2563eb;
+}

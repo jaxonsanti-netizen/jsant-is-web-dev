@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Web App | Guessing Game</title>
+  <style>
+    body { font-family: Arial, Helvetica, sans-serif; margin: 0; background: #0b1220; color: #e5e7eb; }
+    .wrap { max-width: 720px; margin: 40px auto; padding: 20px; }
+    .card { background: #111827; border: 1px solid #1f2937; border-radius: 16px; padding: 18px; }
+    input, select, button { padding: 10px; border-radius: 10px; border: 1px solid #374151; background: #0b1220; color: #e5e7eb; }
+    button { cursor: pointer; }
+    .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+    .pill { padding: 6px 10px; border: 1px solid #374151; border-radius: 999px; }
+    a { color: #93c5fd; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <p><a href="scratch.html">← Back to Scratch Page</a></p>
+
+    <div class="card">
+      <h1>Number Guessing Game</h1>
+      <p>Pick a difficulty, then guess the secret number. You’ll get hot/cold feedback.</p>
+
+      <div class="row" style="margin-bottom:12px;">
+        <label class="pill">Difficulty:
+          <select id="difficulty">
+            <option value="10">Easy (1–10)</option>
+            <option value="50" selected>Medium (1–50)</option>
+            <option value="100">Hard (1–100)</option>
+          </select>
+        </label>
+
+        <button id="newGame">New Game</button>
+        <span class="pill">Attempts: <span id="attempts">0</span></span>
+        <span class="pill">Best: <span id="best">—</span></span>
+      </div>
+
+      <div class="row">
+        <input id="guess" type="number" placeholder="Enter a number" />
+        <button id="submit">Guess</button>
+      </div>
+
+      <p id="msg" style="margin-top:14px;"></p>
+    </div>
+  </div>
+
+  <script>
+    let max = 50;
+    let secret = rand(1, max);
+    let attempts = 0;
+    let best = null;
+
+    const el = (id) => document.getElementById(id);
+    const msg = el("msg");
+
+    function rand(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function reset() {
+      max = Number(el("difficulty").value);
+      secret = rand(1, max);
+      attempts = 0;
+      el("attempts").textContent = attempts;
+      el("guess").value = "";
+      msg.textContent = `New game started. Range is 1–${max}.`;
+    }
+
+    function feedback(g) {
+      const diff = Math.abs(g - secret);
+      if (diff === 0) return "Correct! ✅";
+      if (diff <= Math.ceil(max * 0.05)) return "Very hot 🔥";
+      if (diff <= Math.ceil(max * 0.15)) return "Warm 🙂";
+      return "Cold 🧊";
+    }
+
+    el("newGame").addEventListener("click", reset);
+    el("difficulty").addEventListener("change", reset);
+
+    el("submit").addEventListener("click", () => {
+      const g = Number(el("guess").value);
+      if (!Number.isInteger(g) || g < 1 || g > max) {
+        msg.textContent = `Enter an integer from 1–${max}.`;
+        return;
+      }
+
+      attempts += 1;
+      el("attempts").textContent = attempts;
+
+      if (g === secret) {
+        msg.textContent = `Correct! ✅ You got it in ${attempts} attempts.`;
+        if (best === null || attempts < best) {
+          best = attempts;
+          el("best").textContent = best;
+        }
+      } else {
+        msg.textContent = `${feedback(g)} Try ${g < secret ? "higher" : "lower"}.`;
+      }
+    });
+
+    // start message
+    reset();
+  </script>
+</body>
+</html>
